@@ -1,5 +1,6 @@
 class Train
-  attr_reader :number, :speed, :count_wagons, :type, :current_station
+  attr_reader :number, :type, :route
+  attr_accessor :speed, :count_wagons, :current_station
 
   def initialize(number, type, count_wagons)
     @number = number
@@ -8,47 +9,59 @@ class Train
     @speed = 0
   end
 
-  # подкидываем в топ угля
   def gain_speed(speed)
-    @speed += speed
+    self.speed += speed
   end
 
-  # дергаем стоп-кран
   def stop
-    @speed = 0
+    self.speed = 0
   end
 
-  # добавляем вагон
   def change_count_wagons(change)
-    return if @speed.positive?
+    return if speed.positive?
 
     if change == 'add'
-      @count_wagons += 1
-    elsif change == 'remove'
-      @count_wagons -= 1 if @count_wagons.positive?
+      self.count_wagons += 1
+    elsif change == 'remove' && self.count_wagons.positive?
+      self.count_wagons -= 1
     else
       puts 'Введите add для добавления или remove для удаления'
     end
   end
 
-  # получаем маршрут
-  def get_route(route)
+  def add_route(route)
     @route = route
-    @current_station = route.list_stations[0]
+    self.current_station = route.list_stations[0]
+    current_station.add_train(self)
   end
 
-  # получаем следующую
   def next_station
-    @route.list_stations[@route.list_stations.index(@current_station) + 1]
+    new_station_index = route.list_stations.index(current_station) + 1
+    return unless new_station_index <= route.list_stations.length - 1
+
+    route.list_stations[route.list_stations.index(current_station) + 1]
   end
 
-  # получаем предыдущую станцию
   def previous_station
-    @route.list_stations[@route.list_stations.index(@current_station) - 1]
+    new_station_index = route.list_stations.index(current_station) - 1
+    return unless new_station_index.positive?
+
+    route.list_stations[route.list_stations.index(current_station) - 1]
   end
 
-  # двигается на следующую станцию
   def move_next_station
-    @current_station = @route.list_stations[@route.list_stations.index(@current_station) + 1]
+    return unless next_station
+
+    current_station.go_train(self)
+    self.current_station = route.list_stations[route.list_stations.index(current_station) + 1]
+    current_station.add_train(self)
+  end
+
+  def move_previous_station
+    return unless previous_station
+
+    current_station.go_train(self)
+    self.current_station = route.list_stations[route.list_stations.index(current_station) - 1]
+    current_station.add_train(self)
   end
 end

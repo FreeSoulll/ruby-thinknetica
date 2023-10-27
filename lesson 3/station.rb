@@ -6,20 +6,19 @@ class Station
     @trains = []
   end
 
-  # принимаем поезд
   def add_train(train)
-    @trains << train
+    trains << train
   end
 
-  # получаем список поездов по типу
-  def get_sorted_trains(type)
-    @trains.each do |train|
-      puts train if train.type == type
+  def sorted_trains(type)
+    sorted_trains = []
+    trains.each do |train|
+      sorted_trains << train if train.type == type
     end
+    sorted_trains
   end
 
-  # отправляем поезд
   def go_train(train)
-    @trains.delete(train)
+    trains.delete(train)
   end
 end
