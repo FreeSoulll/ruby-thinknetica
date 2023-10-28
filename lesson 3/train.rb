@@ -39,21 +39,21 @@ class Train
     new_station_index = route.list_stations.index(current_station) + 1
     return unless new_station_index <= route.list_stations.length - 1
 
-    route.list_stations[route.list_stations.index(current_station) + 1]
+    route.list_stations[new_station_index]
   end
 
   def previous_station
     new_station_index = route.list_stations.index(current_station) - 1
-    return unless new_station_index.positive?
+    return unless new_station_index > -1
 
-    route.list_stations[route.list_stations.index(current_station) - 1]
+    route.list_stations[new_station_index]
   end
 
   def move_next_station
     return unless next_station
 
     current_station.go_train(self)
-    self.current_station = route.list_stations[route.list_stations.index(current_station) + 1]
+    self.current_station = next_station
     current_station.add_train(self)
   end
 
@@ -61,7 +61,7 @@ class Train
     return unless previous_station
 
     current_station.go_train(self)
-    self.current_station = route.list_stations[route.list_stations.index(current_station) - 1]
+    self.current_station = previous_station
     current_station.add_train(self)
   end
 end

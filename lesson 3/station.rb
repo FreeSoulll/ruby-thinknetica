@@ -11,11 +11,7 @@ class Station
   end
 
   def sorted_trains(type)
-    sorted_trains = []
-    trains.each do |train|
-      sorted_trains << train if train.type == type
-    end
-    sorted_trains
+    trains.select { |train| train.type == type }
   end
 
   def go_train(train)
