@@ -1,8 +1,5 @@
 class CargoWagon < Wagon
-  attr_reader :type
-
-  def initialize
-    super
+  def type
     @type = :cargo
   end
 end

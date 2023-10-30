@@ -1,12 +1,14 @@
 class Train
-  attr_reader :number, :type, :route
-  attr_accessor :speed, :current_station, :wagons
+  attr_reader :number, :route, :speed, :current_station, :wagons
 
-  def initialize(number, type)
+  def initialize(number)
     @number = number
-    @type = type
     @speed = 0
     @wagons = []
+  end
+
+  def type
+    raise NotImplementedError
   end
 
   def add_route(route)
@@ -15,8 +17,12 @@ class Train
     current_station.add_train(self)
   end
 
+  def add_wagon(wagon)
+    wagons << wagon if wagon.type == type && speed.zero?
+  end
+
   def remove_wagon(wagon)
-    wagons.delete(wagon) if wagons.include?(wagon)
+    wagons.delete(wagon) if wagons.include?(wagon) && speed.zero?
   end
 
   def next_station
@@ -51,6 +57,8 @@ class Train
 
   # Даныне методы скорее всего будут юзаться внутри класса, так что вынес их сюда
   protected
+
+  attr_writer :speed, :current_station, :wagons
 
   def gain_speed(speed)
     self.speed += speed
