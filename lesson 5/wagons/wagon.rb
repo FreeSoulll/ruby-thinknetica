@@ -1,7 +1,5 @@
 class Wagon
-  attr_reader :type
-
-  def initialize
-    @type = type
+  def type
+    raise NotImplementedError
   end
 end
