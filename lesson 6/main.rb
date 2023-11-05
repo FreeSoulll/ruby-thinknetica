@@ -53,16 +53,6 @@ class RailRoad
     @wagons = []
   end
 
-  def seed
-    stations << Station.new('Москва')
-    stations << Station.new('Петушки')
-    trains << PassengerTrain.new(12)
-    trains << CargoTrain.new(15)
-    routes << Route.new(stations[0], stations[1])
-    wagons << PassengerWagon.new()
-    wagons << CargoWagon.new()
-  end
-
   def menu
     loop do
       puts FIRST_ITERATION_TEXT

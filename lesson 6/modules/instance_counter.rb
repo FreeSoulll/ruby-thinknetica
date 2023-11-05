@@ -6,17 +6,19 @@ module InstanceCounter
   end
 
   module ClassMethods
-    def instances
-      @instances ||= 0
-    end
+    attr_reader :instances
+
+    private
+
+    attr_writer :instances
   end
 
   module InstanceMethods
     protected
 
     def register_instance
-      instances = self.class.instances + 1
-      self.class.send(:instances, instances)
+      instances = self.class.instances.nil? ? 1 : self.class.instances + 1
+      self.class.send(:instances=, instances)
     end
   end
 end
