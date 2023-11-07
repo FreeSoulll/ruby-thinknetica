@@ -53,16 +53,6 @@ class RailRoad
     @wagons = []
   end
 
-  def seed
-    stations << Station.new('Москва')
-    stations << Station.new('Петушки')
-    trains << PassengerTrain.new('qqq-56')
-    trains << CargoTrain.new('asd-12')
-    routes << Route.new(stations[0], stations[1])
-    wagons << PassengerWagon.new()
-    wagons << CargoWagon.new()
-  end
-
   def menu
     loop do
       puts FIRST_ITERATION_TEXT
@@ -91,7 +81,8 @@ class RailRoad
         create_operation = gets.chomp.to_i
         case create_operation
         when 1
-          break if validate_routes || validate_stations
+          validate_array_of_entities!(stations, 'станции')
+          validate_array_of_entities!(routes, 'маршрутов')
 
           # выводим список маршрутов
           routes_list
@@ -106,7 +97,7 @@ class RailRoad
             remove_station(picked_route)
           end
         when 2
-          break if validate_trains
+          validate_array_of_entities!(trains, 'поездов')
 
           picked_train = trains_list
           puts OPERATION_WITH_TRAIN_TEXT
@@ -114,18 +105,18 @@ class RailRoad
 
           case create_operation
           when 1
-            break if validate_routes
+            validate_array_of_entities!(routes, 'маршрутов')
 
             # выводим список маршрутов
             routes_list
             picked_route = gets.chomp.to_i
             picked_train.add_route(routes[picked_route])
           when 2
-            break if validate_wagons
+            validate_array_of_entities!(wagons, 'вагонов')
 
             change_wagons(picked_train)
           when 3
-            break if wagons_from_train(picked_train)
+            validate_array_of_entities!(train.wagons, 'у поезда  вагонов')
 
             change_wagons(picked_train, :remove)
           when 4
@@ -145,7 +136,7 @@ class RailRoad
       else
         'Введите команду из списка'
       end
-      break if first_step.zero?
+      raise 'Осуществлен выход из команды' if first_step.zero?
     end
   end
 
@@ -154,28 +145,8 @@ class RailRoad
 
   attr_writer :stations, :trains, :routes, :wagons
 
-  def validate_routes
-    puts 'У вас нет маршрутов, сначала создайте хотя бы 1' unless routes.length > 0
-  end
-
-  def validate_trains
-    puts 'У вас нет поездов, сначала создайте хотя бы 1' unless trains.length > 0
-  end
-
-  def validate_stations
-    puts 'У вас нет станции, сначала создайте хотя бы 1' unless stations.length > 0
-  end
-
-  def validate_remove_stations(stations)
-    puts 'У вас нет станции для удаления, сначала создайте хотя бы 1' unless stations.length > 0
-  end
-
-  def validate_wagons
-    puts 'У вас нет вагонов, сначала создайте хотя бы 1' unless wagons.length > 0
-  end
-
-  def wagons_from_train(train)
-    puts 'У поезда нет вагонов, сначала добавьте хотя бы 1' unless train.wagons.length > 0
+  def validate_array_of_entities!(entities, entity_name)
+    raise("У вас нет #{entity_name}, сначала создайте хотя бы 1") unless entities.length > 0
   end
 
   def create_station
@@ -198,24 +169,26 @@ class RailRoad
 
     trains << train
     puts "Создан поезд  - #{train}"
-  # runtime потому что там всегда один номер только проверяется, а в нем этот тип только
   rescue RuntimeError => e
     puts e.message
-    retry if train.nil? && !train&.valid?
+    retry
   end
 
   def create_route
     puts 'Введите название первой станции'
     first_name = gets.chomp
-    first_station = Station.new(first_name) if first_name
+    first_station = Station.new(first_name)
     stations << first_station
 
     puts 'Введите название второй станции'
     second_name = gets.chomp
-    second_station = Station.new(second_name) if second_name
+    second_station = Station.new(second_name)
     stations << second_station
 
     routes << Route.new(first_station, second_station)
+  rescue RuntimeError => e
+    puts e.message
+    retry
   end
 
   def create_wagon
@@ -224,6 +197,9 @@ class RailRoad
     return wagons << PassengerWagon.new if type_wagon == 1
 
     wagons << CargoWagon.new
+  rescue RuntimeError => e
+    puts e.message
+    retry
   end
 
   def add_station(picked_route)
@@ -240,7 +216,7 @@ class RailRoad
                           .list_stations
                           .slice(1, routes[picked_route].list_stations.length - 2)
     puts stations_route_list
-    return if validate_remove_stations(stations_route_list)
+    validate_array_of_entities!(stations, 'станции для удаления')
 
     puts 'Вот список  Станций, выберите индекс той, которую хотите удалить'
     stations_list(stations_route_list)

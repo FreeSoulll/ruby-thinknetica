@@ -1,7 +1,9 @@
 require_relative './modules/instance_counter'
+require_relative './modules/validatable'
 
 class Station
   include InstanceCounter
+  include Validatable
   attr_reader :trains, :name
 
   @@all_staions = []
@@ -16,13 +18,6 @@ class Station
     @trains = []
     @@all_staions << self
     register_instance
-  end
-
-  def valid?
-    validate!
-    true
-  rescue
-    false
   end
 
   def add_train(train)
@@ -40,6 +35,6 @@ class Station
   protected
 
   def validate!
-    raise 'Имя не может быть пустым' if name.nil?
+    raise 'Имя не может быть пустым' if name.empty?
   end
 end
