@@ -1,35 +1,39 @@
-class TrainInMotion < StandardError
+class TrainException < StandardError; end
+
+class TrainInMotion < TrainException
   def initialize(msg = 'Поезд находится в движении, невозможно прицепить вагон')
     super
   end
 end
 
-class TrainType < StandardError
+class WrongTrainType < TrainException
   def initialize(msg = 'Поезд тип вагона не совпадает с типом поезда')
     super
   end
 end
 
-class TrainWagonsInclude < StandardError
+class TrainNotIncludeWagons < TrainException
   def initialize(msg = 'У поезда нет прицепленных вагонов')
     super
   end
 end
 
-class LastStation < StandardError
+class AlreadyLastStation < TrainException
   def initialize(msg = 'Это конечная станция')
     super
   end
 end
 
-class FirstStation < StandardError
+class AlreadyFirstStation < TrainException
   def initialize(msg = 'Это начальная станция')
     super
   end
 end
 
-class TrainRoute < StandardError
+class EmpyTrainRoute < TrainException
   def initialize(msg = 'У поезда нет маршрута, добавьте маршрут')
     super
   end
 end
+
+class ValidationError < StandardError; end

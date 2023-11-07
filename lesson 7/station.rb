@@ -35,6 +35,6 @@ class Station
   protected
 
   def validate!
-    raise 'Имя не может быть пустым' if name.empty?
+    raise ValidationError, 'Имя не может быть пустым' if name.empty?
   end
 end

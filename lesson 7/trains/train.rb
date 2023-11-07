@@ -38,65 +38,61 @@ class Train
 
   def add_wagon(wagon)
     raise TrainInMotion unless speed.zero?
-    raise TrainType unless wagon.type == type
+    raise WrongTrainType unless wagon.type == type
 
     wagons << wagon
-  rescue TrainInMotion => e
-    puts e.message
-  rescue TrainType => e
+  rescue TrainException => e
     puts e.message
   end
 
   def remove_wagon(wagon)
     raise TrainInMotion unless speed.zero?
-    raise TrainWagonsInclude unless wagons.include?(wagon)
+    raise TrainNotIncludeWagons unless wagons.include?(wagon)
 
     wagons.delete(wagon)
-  rescue TrainInMotion => e
-    puts e.message
-  rescue TrainType => e
+  rescue TrainException => e
     puts e.message
   end
 
   def next_station
-    raise TrainRoute if route.nil?
+    raise EmpyTrainRoute if route.nil?
 
     new_station_index = route.list_stations.index(current_station) + 1
     return unless new_station_index <= route.list_stations.length - 1
 
     route.list_stations[new_station_index]
-  rescue TrainRoute => e
+  rescue TrainException => e
     puts e.message
   end
 
   def previous_station
-    raise TrainRoute if route.nil?
+    raise EmpyTrainRoute if route.nil?
 
     new_station_index = route.list_stations.index(current_station) - 1
     return unless new_station_index > -1
 
     route.list_stations[new_station_index]
-  rescue TrainRoute => e
+  rescue TrainException => e
     puts e.message
   end
 
   def move_next_station
-    raise LastStation unless next_station
+    raise AlreadyLastStation unless next_station
 
     current_station.go_train(self)
     self.current_station = next_station
     current_station.add_train(self)
-  rescue LastStation => e
+  rescue TrainException => e
     puts e.message
   end
 
   def move_previous_station
-    raise FirstStation unless previous_station
+    raise AlreadyFirstStation unless previous_station
 
     current_station.go_train(self)
     self.current_station = previous_station
     current_station.add_train(self)
-  rescue FirstStation => e
+  rescue TrainException => e
     puts e.message
   end
 
@@ -106,7 +102,7 @@ class Train
   attr_writer :speed, :current_station, :wagons
 
   def validate!
-    raise 'Номер указан не в правильном формате' if number !~ TRAIN_NUMBER_FORMAT
+    raise ValidationError, 'Номер указан не в правильном формате' if number !~ TRAIN_NUMBER_FORMAT
   end
 
   def gain_speed(speed)

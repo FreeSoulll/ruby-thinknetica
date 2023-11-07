@@ -6,6 +6,7 @@ require_relative 'wagons/passenger_wagon'
 require_relative 'wagons/cargo_wagon'
 require_relative 'route'
 require_relative 'station'
+require_relative 'custom_errors'
 
 class RailRoad
   FIRST_ITERATION_TEXT = [
@@ -153,6 +154,10 @@ class RailRoad
     puts 'Введите название станции'
     station_name = gets.chomp
     stations << Station.new(station_name) if station_name
+
+  rescue StandardError => e
+    puts e.message
+    retry
   end
 
   def create_train
@@ -186,18 +191,18 @@ class RailRoad
     stations << second_station
 
     routes << Route.new(first_station, second_station)
-  rescue RuntimeError => e
+  rescue ValidationError => e
     puts e.message
     retry
   end
 
   def create_wagon
-    puts 'Укажите 1 если хотите создать пассажирский или 2 если хотите создать грузовой вагон'
+    puts 'Укажите 1 если хотите создать пассажирский или любой другой символ, если хотите создать грузовой вагон'
     type_wagon = gets.chomp.to_i
     return wagons << PassengerWagon.new if type_wagon == 1
 
     wagons << CargoWagon.new
-  rescue RuntimeError => e
+  rescue ValidationError => e
     puts e.message
     retry
   end

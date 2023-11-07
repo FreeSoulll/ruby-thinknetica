@@ -25,6 +25,6 @@ class Route
   protected
 
   def validate!
-    raise 'В маршруте при создании  должны быть начальная станция и конечная' if list_stations.empty?
+    raise ValidationError, 'В маршруте при создании  должны быть начальная станция и конечная' if list_stations.empty?
   end
 end

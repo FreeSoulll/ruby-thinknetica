@@ -1,20 +1,14 @@
 module  Validatable
-  def self.included(base)
-    base.send(:include, InstanceMethods)
+  def valid?
+    validate!
+    true
+  rescue
+    false
   end
 
-  module InstanceMethods
-    def valid?
-      self.class.validate!
-      true
-    rescue
-      false
-    end
+  protected
 
-    protected
-
-    def validate!
-      raise NotImplementedError
-    end
+  def validate!
+    raise NotImplementedError
   end
 end
