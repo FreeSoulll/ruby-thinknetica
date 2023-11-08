@@ -54,6 +54,16 @@ class RailRoad
     @wagons = []
   end
 
+  def seed
+    stations << Station.new('Москва')
+    stations << Station.new('Петушки')
+    trains << PassengerTrain.new('122-12')
+    trains << CargoTrain.new('153-22')
+    routes << Route.new(stations[0], stations[1])
+    wagons << PassengerWagon.new()
+    wagons << CargoWagon.new()
+  end
+
   def menu
     loop do
       puts FIRST_ITERATION_TEXT
@@ -121,9 +131,17 @@ class RailRoad
 
             change_wagons(picked_train, :remove)
           when 4
-            picked_train.move_next_station
+            begin
+              picked_train.move_next_station
+            rescue TrainException => e
+              puts e.message
+            end
           when 5
-            picked_train.move_previous_station
+            begin
+              picked_train.move_previous_station
+            rescue TrainException => e
+              puts e.message
+            end
           when 0
             break
           end
@@ -155,7 +173,7 @@ class RailRoad
     station_name = gets.chomp
     stations << Station.new(station_name) if station_name
 
-  rescue StandardError => e
+  rescue ValidationError => e
     puts e.message
     retry
   end
@@ -241,6 +259,8 @@ class RailRoad
       picked_wagon = gets.chomp.to_i
       picked_train.add_wagon(wagons[picked_wagon])
     end
+  rescue TrainException => e
+    puts e.message
   end
 
   def trains_list
