@@ -1,17 +1,18 @@
 class CargoWagon < Wagon
   attr_reader :free_volue, :taked_volue
 
-  def initialize(number, free_space)
-    super(number, free_space)
-    @free_volue = free_space
+  def initialize(number, free_volue)
+    super(number)
+    @free_volue = free_volue
+    validate!
     @taked_volue = 0
   end
 
-  def take_place(added_volue)
+  def take_volue(added_volue)
     raise NotEnoughVolue if added_volue > free_volue
 
-    @taked_volue += added_volue
-    @free_volue -= added_volue
+    self.taked_volue += added_volue
+    self.free_volue -= added_volue
   end
 
   def type
@@ -21,4 +22,9 @@ class CargoWagon < Wagon
   protected
 
   attr_writer :free_volue, :taked_volue
+
+  def validate!
+    raise ValidationError, 'Номер не может быть пустым' if number.to_s.empty?
+    raise ValidationError, 'Количество мест не может быть пустым' if free_volue.to_s.empty?
+  end
 end
