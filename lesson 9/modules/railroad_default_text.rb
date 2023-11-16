@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RailRoadDefaultText
   FIRST_ITERATION_TEXT = [
     'Введите 1, если хотите создать станцию, поезд, вагон или маршрут',

@@ -6,9 +6,6 @@ Metrics/MethodLength:
 
 Metrics/BlockLength:
   Max: 30
-  
-Style/FrozenStringLiteralComment:
-  Enabled: false
 
 Documentation:
   Enabled: false

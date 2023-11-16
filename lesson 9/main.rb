@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'trains/train'
 require_relative 'trains/passenger_train'
 require_relative 'trains/cargo_train'
@@ -27,21 +29,7 @@ class RailRoad
     @wagons = []
   end
 
-  def seed
-    train1 = PassengerTrain.new('122-12')
-    station1 = Station.new('Москва')
-    wagon1 = PassengerWagon.new(20, 12)
-    train1.add_wagon(wagon1)
-    station1.add_train(train1)
-    stations << station1
-    stations << Station.new('Петушки')
-    trains << train1
-    trains << CargoTrain.new('153-22')
-    routes << Route.new(stations[0], stations[1])
-    wagons << wagon1
-    wagons << CargoWagon.new(200, 1)
-  end
-
+  # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
   def menu
     loop do
       puts FIRST_ITERATION_TEXT
@@ -76,8 +64,8 @@ class RailRoad
       raise 'Осуществлен выход из команды' if first_step.zero?
     end
   end
+  # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
 
-  # загоняем все под private, потом у что пока не предполагается использование экземпляров класса
   private
 
   attr_writer :stations, :trains, :routes, :wagons

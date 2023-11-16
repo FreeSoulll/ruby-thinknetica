@@ -329,11 +329,11 @@ class RailRoad
 
   def take_place_in_wagon(wagon)
     if wagon.type == :passenger
-      wagon.volue
+      wagon.take_place
     else
       puts "Текущий свободный объем - #{wagon.free_volue}. Укажите какой объем нужно занять"
       added_volue = gets.chomp.to_i
-      wagon.volue(added_volue)
+      wagon.take_volue(added_volue)
     end
   rescue WagonException => e
     puts e.message

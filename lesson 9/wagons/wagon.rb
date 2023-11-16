@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../modules/company_manufacture'
 
 class Wagon

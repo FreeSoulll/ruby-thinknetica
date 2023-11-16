@@ -11,7 +11,7 @@ class PassengerWagon < Wagon
     @taked_places = 0
   end
 
-  def take_volue
+  def take_place
     raise NotEnoughPlace if free_places == 0
 
     self.taked_places += 1

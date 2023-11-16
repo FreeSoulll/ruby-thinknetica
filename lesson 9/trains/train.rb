@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../modules/company_manufacture'
 require_relative '../modules/instance_counter'
 require_relative '../modules/validatable'
@@ -88,7 +90,6 @@ class Train
     current_station.add_train(self)
   end
 
-  # Даныне методы скорее всего будут юзаться внутри класса, так что вынес их сюда
   protected
 
   attr_writer :speed, :current_station, :wagons
