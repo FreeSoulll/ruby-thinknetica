@@ -28,7 +28,6 @@ module Validation
           send(:presence_validate, attr_value)
         when :format
           validate_format = item[:args][0]
-          puts attr_value !~ validate_format
           send(:format_validate, attr_value, validate_format)
         when :type
           validate_type = item[:args][0]
@@ -50,30 +49,14 @@ module Validation
   private
 
   def presence_validate(value)
-    puts "create train #{value}"
     raise PresenceValidate if value.nil? || value.to_s.empty?
   end
 
   def format_validate(value, value_format)
-    puts value_format
-    puts value !~ value_format
     raise FormatValidate if value.nil? || value !~ value_format
   end
 
   def type_validate(value, type)
     raise TypeValidate unless value.instance_of?(type)
-  end
-end
-
-class Test
-  include Validation
-
-  validate :name, :presence
-  validate :number, :format, '[A-Z]{0,3}'
-  validate :name, :type, String
-  def initialize
-    @name = 'aads'
-    @number = 'AZ'
-    validate!
   end
 end
