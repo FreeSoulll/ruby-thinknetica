@@ -4,7 +4,10 @@ module Accessors
   def attr_accessor_with_history(*attrs)
     attrs.each do |name|
       curent_attr = "@#{name}".to_sym
-      define_method(name) { instance_variable_get(curent_attr) }
+      define_method(name) do
+        current_value = instance_variable_get(curent_attr)
+        current_value&.last
+      end
 
       define_method("#{name}_history") do
         instance_variable_get(curent_attr)

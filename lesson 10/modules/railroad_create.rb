@@ -23,7 +23,7 @@ module RailRoadCreate
 
     trains << train
     puts "Создан поезд  - #{train}"
-  rescue RuntimeError => e
+  rescue FormatValidate => e
     puts e.message
     retry
   end
