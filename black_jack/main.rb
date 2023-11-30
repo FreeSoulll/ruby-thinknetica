@@ -98,10 +98,16 @@ class Game
 
   def play_round
     take_cards
+    second_step
     puts "Ваша сумма - #{player.points}"
   end
 
   private
+  
+  def second_step
+   player.cards << deck.take_card if player.points < 17
+   dealer.cards << deck.take_card if dealer.points < 17
+  end
 
   def take_cards
     player.cards << deck.take_card
@@ -113,7 +119,7 @@ class Game
   def define_winner
     puts "player.points #{player.points}"
     puts "dealer.points #{dealer.points}"
-
+     
     if player.points < dealer.points
       puts 'dealer win'
     elsif player.points == dealer.points
@@ -127,4 +133,6 @@ end
 game = Game.new()
 game.start
 
+
 #user = User.new('pepe')
+#user.bet
